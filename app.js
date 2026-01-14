@@ -11,7 +11,11 @@ function readNotes() {
 }
 
 function writeNotes(notes) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  } catch {
+    // In some iframe contexts (and Safari), storage can be blocked. Fail safely.
+  }
 }
 
 function createNoteElement(note) {
@@ -62,18 +66,31 @@ function render() {
 function init() {
   const form = document.getElementById('note-form');
   const input = document.getElementById('note-input');
+  const addBtn = document.getElementById('add-btn');
   if (!form || !input) return;
 
-  form.addEventListener('submit', (e) => {
+function addNote() {
+  const text = input.value.trim();
+  if (!text) return;
+
+  const notes = readNotes();
+  notes.unshift({ id: Date.now().toString(), text });
+
+  writeNotes(notes);
+  input.value = '';
+  render();
+}
+
+// Click “Add”
+if (addBtn) addBtn.addEventListener('click', addNote);
+
+// Press Enter in the input
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
     e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    const notes = readNotes();
-    notes.unshift({ id: Date.now().toString(), text });
-    writeNotes(notes);
-    input.value = '';
-    render();
-  });
+    addNote();
+  }
+});
 
   // initial render
   render();
