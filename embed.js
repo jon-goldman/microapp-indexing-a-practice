@@ -103,3 +103,22 @@
   // Export to global
   global.createNotesWidget = createShadowWidget;
 })(window);
+
+(function () {
+  function postHeight() {
+    const height = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    window.parent?.postMessage({ type: "MICROAPP_HEIGHT", height }, "*");
+  }
+
+  window.addEventListener("load", postHeight);
+  window.addEventListener("resize", postHeight);
+
+  const obs = new MutationObserver(() => postHeight());
+  obs.observe(document.body, { childList: true, subtree: true, attributes: true });
+
+  setTimeout(postHeight, 250);
+  setTimeout(postHeight, 1000);
+})();
