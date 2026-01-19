@@ -42,3 +42,12 @@ Notes are stored locally in `localStorage` under the key `simple-notes:v1`.
 ## License
 
 Choose and add a license if you plan to publish this project.
+
+
+## Ship a new experiment (checklist)
+1) Duplicate this repo (Use as template).
+2) Rename title + subtitle in index.html.
+3) Update DATA or logic in app.js.
+4) Commit + push.
+5) Settings → Pages → main / root.
+6) Copy URL into Framer Entry + embed iframe.
